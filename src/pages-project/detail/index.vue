@@ -76,6 +76,16 @@ const previewImage = (image: any, index: number) => {
     current: index
   })
 }
+
+// 上传图片
+const uploadImage = () => {
+  // 这里调用你的上传工具方法
+  // 例如：uploadUtil.uploadImage().then(url => { ... })
+  uni.showToast({
+    title: '上传功能开发中',
+    icon: 'none'
+  })
+}
 </script>
 
 <template>
@@ -150,6 +160,7 @@ const previewImage = (image: any, index: number) => {
         <view class="text-sm text-gray-500 mb-3">{{ projectInfo.attachments.description }}</view>
 
         <view class="grid grid-cols-3 gap-3">
+          <!-- 展示图片 -->
           <view
             v-for="(image, index) in projectInfo.attachments.images"
             :key="image.id"
@@ -161,28 +172,15 @@ const previewImage = (image: any, index: number) => {
               class="w-full h-full object-cover"
               mode="aspectFill"
             />
-            <!-- 视频标识 -->
-            <view
-              v-if="image.type === 'video'"
-              class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center"
-            >
-              <view class="w-8 h-8 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
-                <view class="w-0 h-0 border-l-3 border-l-gray-600 border-t-2 border-t-transparent border-b-2 border-b-transparent ml-1"></view>
-              </view>
-            </view>
           </view>
-
-          <!-- 添加更多按钮 -->
-          <view class="aspect-square bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-            <view class="w-8 h-8 flex items-center justify-center">
-              <view class="w-6 h-0.5 bg-gray-400"></view>
-              <view class="w-0.5 h-6 bg-gray-400 absolute"></view>
-            </view>
+          <!-- 上传按钮 -->
+          <view
+            v-if="projectInfo.attachments.images.filter(img => img.type === 'image').length < 6"
+            class="aspect-square bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-3xl cursor-pointer"
+            @tap="uploadImage"
+          >
+            +
           </view>
-        </view>
-
-        <view class="text-sm text-gray-500 mt-3">
-          发布日期：{{ projectInfo.publishDate }}
         </view>
       </view>
 
