@@ -19,8 +19,11 @@ const themeStore = useThemeStore()
 
 // 页面跳转方法
 function navigateToProject() {
-  uni.switchTab({
-    url: '/pages/index/project-hall',
+  // uni.switchTab({
+  //   url: '/pages/index/project-hall',
+  // })
+    uni.navigateTo({
+    url: `/pages-register/accept-oneParty/index`
   })
 }
 

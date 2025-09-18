@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { safeAreaInsets } from '@/utils/systemInfo'
 
@@ -48,6 +48,14 @@ onLoad((options: any) => {
   if (options.name) {
     projectName.value = decodeURIComponent(options.name)
     projectInfo.value.name = projectName.value
+    uni.setNavigationBarTitle({ title: projectName.value }) // 动态设置标题
+  }
+})
+
+// 监听项目名称变化（如有异步赋值场景）
+watch(() => projectInfo.value.name, (newName) => {
+  if (newName) {
+    uni.setNavigationBarTitle({ title: newName })
   }
 })
 
@@ -90,29 +98,13 @@ const uploadImage = () => {
 
 <template>
   <view class="min-h-screen bg-gray-50">
-    <!-- 顶部标题栏 -->
-    <view
-      class="flex items-center justify-between px-4 py-3 bg-orange-400"
-      :style="{ paddingTop: `${safeAreaInsets?.top + 12}px` }"
-    >
-      <!-- 返回按钮 -->
-      <view
-        class="w-6 h-6 flex items-center justify-center"
-        @tap="goBack"
-      >
-        <view class="w-3 h-3 border-l-2 border-t-2 border-white transform rotate-[-45deg]"></view>
-      </view>
 
-      <view class="text-white text-lg font-medium">{{ projectInfo.name }}</view>
-
-      <!-- 右侧菜单按钮 -->
+     <!-- 右侧菜单按钮 -->
       <view class="w-6 h-6 flex flex-col items-center justify-center">
         <view class="w-1 h-1 bg-white rounded-full mb-1"></view>
         <view class="w-1 h-1 bg-white rounded-full mb-1"></view>
         <view class="w-1 h-1 bg-white rounded-full"></view>
       </view>
-    </view>
-
     <!-- 内容区域 -->
     <scroll-view
       scroll-y
