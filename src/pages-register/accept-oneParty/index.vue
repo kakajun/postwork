@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { safeAreaInsets } from '@/utils/systemInfo'
+import TechSupplementDrawer from './components/TechSupplementDrawer.vue'
 
 // 页面配置
 definePage({
@@ -28,7 +29,7 @@ const techOptions = ref([
 const formData = ref({
   avatar: '',
   techRequirementIndex: 0, // 技术要求索引，默认选择第一个
-  techSupplement: '',
+  selectedTechs: [] as string[], // 选中的技术数组
   tags: [] as string[]
 })
 
@@ -38,6 +39,9 @@ const showTechPicker = ref(false)
 // 新标签输入
 const newTag = ref('')
 const showTagInput = ref(false)
+
+// 技术补充弹框控制
+const showTechDrawer = ref(false)
 
 // 页面加载
 onLoad(() => {
@@ -71,7 +75,7 @@ const chooseAvatar = () => {
 // 技术要求选择
 const onTechRequirementChange = (e: any) => {
   // e.detail.value 是数组
-  const index = e.detail.value[0]
+  const index =e.detail.value&& e.detail.value[0]
   formData.value.techRequirementIndex = index
   showTechPicker.value = false
 }
@@ -112,10 +116,20 @@ const cancelAddTag = () => {
   newTag.value = ''
   showTagInput.value = false
 }
-// 跳转到项目大厅
-const gotoProjectHall = () => {
-  uni.switchTab({
-    url: '/pages/index/project-hall',
+
+// 显示技术补充弹框
+const showTechSupplementDrawer = () => {
+  showTechDrawer.value = true
+}
+
+// 技术补充弹框确认
+const onTechSupplementConfirm = (selectedTechs: string[]) => {
+  formData.value.selectedTechs = selectedTechs
+}
+// 跳转到注册第二步
+const gotoStepSecond = () => {
+  uni.navigateTo({
+    url: '/pages-register/accept-oneParty/StepSecond'
   })
 }
 // 提交表单
@@ -137,13 +151,13 @@ const submitForm = () => {
     techRequirement: techOptions.value[formData.value.techRequirementIndex].label
   })
   uni.showToast({
-    title: '注册成功',
+    title: '信息已保存',
     icon: 'success'
   })
 
-  // 延迟跳转到项目大厅
+  // 延迟跳转到第二步
   setTimeout(() => {
-    gotoProjectHall()
+    gotoStepSecond()
   }, 1500)
 }
 
@@ -191,7 +205,7 @@ const submitForm = () => {
           </view>
           <view class="w-2 h-2 border-r-2 border-b-2 border-gray-400 transform rotate-45"></view>
         </view>
-        
+
         <!-- 技术要求选择器 -->
          <wd-picker
            v-model="showTechPicker"
@@ -203,16 +217,29 @@ const submitForm = () => {
          />
       </view>
 
-      <!-- 技术补充输入 -->
+      <!-- 技术补充 Cell -->
       <view class="mb-6">
-        <view class="bg-white rounded-lg px-4 py-4 shadow-sm">
-          <textarea
-            v-model="formData.techSupplement"
-            placeholder="技术补充"
-            class="w-full min-h-20 text-base text-gray-700 resize-none"
-            maxlength="200"
-            :show-confirm-bar="false"
+        <wd-cell-group>
+          <wd-cell
+            title="技术栈选择"
+            :value="formData.selectedTechs.length > 0 ? `已选择 ${formData.selectedTechs.length} 项技术` : '点击选择技术栈'"
+            :value-class="formData.selectedTechs.length === 0 ? 'text-gray-400' : 'text-blue-600'"
+            is-link
+            @tap="showTechSupplementDrawer"
           />
+        </wd-cell-group>
+
+        <!-- 显示已选择的技术标签 -->
+        <view v-if="formData.selectedTechs.length > 0" class="mt-3 px-4">
+          <view class="flex flex-wrap gap-2">
+            <view
+              v-for="tech in formData.selectedTechs"
+              :key="tech"
+              class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+            >
+              {{ tech }}
+            </view>
+          </view>
         </view>
       </view>
 
@@ -297,11 +324,18 @@ const submitForm = () => {
         custom-class="w-full"
         @click="submitForm"
       >
-        注册
+        下一步
       </wd-button>
     </view>
 
   </view>
+
+  <!-- 技术补充弹框 -->
+  <TechSupplementDrawer
+    v-model:visible="showTechDrawer"
+    v-model:selected-techs="formData.selectedTechs"
+    @confirm="onTechSupplementConfirm"
+  />
 </template>
 
 <style scoped>
