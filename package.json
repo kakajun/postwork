@@ -119,12 +119,10 @@
     "pinia": "2.0.36",
     "pinia-plugin-persistedstate": "3.2.1",
     "vue": "^3.4.21",
-    "wot-design-uni": "^1.11.1",
+    "wot-design-uni": "^1.12.4",
     "z-paging": "2.8.7"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
     "@dcloudio/types": "^3.4.8",
     "@dcloudio/uni-automator": "3.0.0-4070620250821001",
     "@dcloudio/uni-cli-shared": "3.0.0-4070620250821001",

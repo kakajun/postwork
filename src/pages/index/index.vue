@@ -17,9 +17,20 @@ definePage({
 
 const themeStore = useThemeStore()
 
-const description = ref(
-  'unibest 是一个集成了多种工具和技术的 uniapp 开发模板，由 uniapp + Vue3 + Ts + Vite5 + UnoCss + VSCode 构建，模板具有代码提示、自动格式化、统一配置、代码片段等功能，并内置了许多常用的基本组件和基本功能，让你编写 uniapp 拥有 best 体验。',
-)
+// 页面跳转方法
+function navigateToProject() {
+  uni.switchTab({
+    url: '/pages/index/projectHall',
+  })
+}
+
+function navigateToAccept() {
+  uni.showToast({
+    title: '接单方功能开发中',
+    icon: 'none',
+  })
+}
+
 console.log('index/index 首页打印了')
 
 onLoad(() => {
@@ -28,74 +39,60 @@ onLoad(() => {
 </script>
 
 <template>
-  <view class="bg-white px-4 pt-2" :style="{ marginTop: `${safeAreaInsets?.top}px` }">
-    <view class="mt-10">
-      <image src="/static/logo.svg" alt="" class="mx-auto block h-28 w-28" />
-    </view>
-    <view class="mt-4 text-center text-4xl text-[#d14328]">
-      unibest
-    </view>
-    <view class="mb-8 mt-2 text-center text-2xl">
-      最好用的 uniapp 开发模板
+  <view
+    class="min-h-screen flex flex-col"
+    :style="{
+      background: 'linear-gradient(180deg, #FF6F00 0%, #FFD014 100%)',
+      paddingTop: `${safeAreaInsets?.top}px`,
+    }"
+  >
+    <!-- 顶部标题区域 -->
+    <view class="flex flex-1 flex-col items-center justify-center px-8">
+      <!-- 主标题 -->
+      <view class="mb-16 text-center">
+        <view class="mb-2 text-6xl text-white font-bold">
+          你是?
+        </view>
+        <view class="text-lg text-white opacity-80">
+          Are you complaining?
+        </view>
+      </view>
+
+      <!-- 选择按钮区域 -->
+      <view class="mb-20 flex items-center justify-center gap-20">
+        <!-- 项目方按钮 -->
+        <view class="flex flex-col items-center" style="cursor: pointer;" @tap="navigateToProject">
+          <view class="mb-6 h-20 w-20 flex items-center justify-center rounded-full bg-white shadow-lg">
+            <image
+              src="@img/index/projectParty.png"
+              class="h-20 w-20"
+              mode="aspectFit"
+            />
+          </view>
+          <text class="text-xl text-white font-medium">项目方</text>
+        </view>
+
+        <!-- 接单方按钮 -->
+        <view class="flex flex-col items-center" style="cursor: pointer;" @tap="navigateToAccept">
+          <view class="mb-6 h-20 w-20 flex items-center justify-center rounded-full bg-white shadow-lg">
+            <image
+              src="@img/index/acceptOneParty.png"
+              class="h-20 w-20"
+              mode="aspectFit"
+            />
+          </view>
+          <text class="text-xl text-white font-medium">接单方</text>
+        </view>
+      </view>
     </view>
 
-    <view class="m-auto mb-2 max-w-100 text-justify indent text-4">
-      {{ description }}
+    <!-- 底部装饰图片 -->
+    <view class="flex justify-center">
+      <image
+        src="@img/index/indexbottom.png"
+        class="h-32 w-full"
+        mode="widthFix"
+      />
     </view>
-    <view class="mt-4 text-center">
-      作者：
-      <text class="text-green-500">
-        菲鸽
-      </text>
-    </view>
-    <view class="mt-4 text-center">
-      官网地址：
-      <text class="text-green-500">
-        https://unibest.tech
-      </text>
-    </view>
-
-    <!-- #ifdef H5 -->
-    <view class="mt-4 text-center">
-      <a href="https://unibest.tech/base/3-plugin" target="_blank" class="text-green-500">
-        新手请看必看章节1：
-      </a>
-    </view>
-    <!-- #endif -->
-    <!-- #ifdef MP-WEIXIN -->
-    <view class="mt-4 text-center">
-      新手请看必看章节1：
-      <text class="text-green-500">
-        https://unibest.tech/base/3-plugin
-      </text>
-    </view>
-    <!-- #endif -->
-    <!-- #ifdef H5 -->
-    <view class="mt-4 text-center">
-      <a href="https://unibest.tech/base/14-faq" target="_blank" class="text-green-500">
-        新手请看必看章节2：
-      </a>
-    </view>
-    <!-- #endif -->
-    <!-- #ifdef MP-WEIXIN -->
-    <view class="mt-4 text-center">
-      新手请看必看章节2：
-      <text class="text-green-500">
-        https://unibest.tech/base/14-faq
-      </text>
-    </view>
-    <!-- #endif -->
-
-    <view class="mt-4 text-center">
-      <wd-button type="primary" class="ml-2" @click="themeStore.setThemeVars({ colorTheme: 'red' })">
-        设置主题变量
-      </wd-button>
-    </view>
-    <view class="mt-4 text-center">
-      UI组件官网：<text class="text-green-500">
-        https://wot-design-uni.cn
-      </text>
-    </view>
-    <view class="h-6" />
   </view>
 </template>
