@@ -135,13 +135,13 @@ const gotoStepSecond = () => {
 // 提交表单
 const submitForm = () => {
   // 表单验证
-  if (!formData.value.avatar) {
-    uni.showToast({
-      title: '请选择头像',
-      icon: 'none'
-    })
-    return
-  }
+  // if (!formData.value.avatar) {
+  //   uni.showToast({
+  //     title: '请选择头像',
+  //     icon: 'none'
+  //   })
+  //   return
+  // }
 
   // 技术要求已有默认值，无需验证
 
@@ -158,7 +158,7 @@ const submitForm = () => {
   // 延迟跳转到第二步
   setTimeout(() => {
     gotoStepSecond()
-  }, 1500)
+  }, 500)
 }
 
 

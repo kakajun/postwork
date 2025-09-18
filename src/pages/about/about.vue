@@ -62,9 +62,9 @@ function gotoVueQuery() {
   })
 }
 function gotoSubPage() {
-  uni.navigateTo({
-    url: '/pages-sub/demo/index',
-  })
+  // uni.navigateTo({
+  //   url: '/pages-sub/demo/index',
+  // })
 }
 
 // uniLayout里面的变量通过 expose 暴露出来后可以在 onReady 钩子获取到（onLoad 钩子不行）
