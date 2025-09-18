@@ -57,7 +57,7 @@ const sendVerificationCode = () => {
   // 开始倒计时
   isCodeSending.value = true
   codeCountdown.value = 60
-  
+
   codeTimer.value = setInterval(() => {
     codeCountdown.value--
     if (codeCountdown.value <= 0) {
@@ -79,55 +79,12 @@ const sendVerificationCode = () => {
 // 跳转到项目大厅
 const gotoProjectHall = () => {
   uni.switchTab({
-    url: '/pages/index/project-hall'
+    url: '/pages/index/ProjectHall'
   })
 }
 
 // 提交表单
 const submitForm = () => {
-  // 表单验证
-  if (!formData.value.company.trim()) {
-    uni.showToast({
-      title: '请输入公司名称',
-      icon: 'none'
-    })
-    return
-  }
-
-  if (!formData.value.contactPerson.trim()) {
-    uni.showToast({
-      title: '请输入联系人',
-      icon: 'none'
-    })
-    return
-  }
-
-  if (!formData.value.phoneNumber) {
-    uni.showToast({
-      title: '请输入手机号码',
-      icon: 'none'
-    })
-    return
-  }
-
-  // 手机号码格式验证
-  const phoneRegex = /^1[3-9]\d{9}$/
-  if (!phoneRegex.test(formData.value.phoneNumber)) {
-    uni.showToast({
-      title: '请输入正确的手机号码',
-      icon: 'none'
-    })
-    return
-  }
-
-  if (!formData.value.verificationCode) {
-    uni.showToast({
-      title: '请输入验证码',
-      icon: 'none'
-    })
-    return
-  }
-
   // 提交逻辑
   console.log('提交表单数据:', formData.value)
   uni.showToast({
@@ -178,7 +135,7 @@ onUnmounted(() => {
             maxlength="50"
           />
         </wd-cell>
-        
+
         <!-- 联系人输入 -->
         <wd-cell title="联系人">
           <input
