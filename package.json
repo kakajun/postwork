@@ -44,6 +44,7 @@
     "dev:h5:prod": "uni --mode production",
     "dev:h5:ssr": "uni --ssr",
     "dev:mp": "uni -p mp-weixin",
+    "vx": "uni -p mp-weixin",
     "dev:mp:test": "uni -p mp-weixin --mode test",
     "dev:mp:prod": "uni -p mp-weixin --mode production",
     "dev:mp-alipay": "uni -p mp-alipay",
