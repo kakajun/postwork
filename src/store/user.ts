@@ -1,13 +1,15 @@
 import type { IUserInfoRes } from '@/api/types/login'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import {
   getUserInfo,
 } from '@/api/login'
+import { updateTabbarListByRole } from '@/tabbar/store'
 
 // 初始化状态
 const userInfoState: IUserInfoRes = {
   userId: -1,
+  role: '', // post 项目发布者 receive 项目接收者
   username: '',
   nickname: '',
   avatar: '/static/images/default-avatar.png',
@@ -46,6 +48,16 @@ export const useUserStore = defineStore(
       setUserInfo(res)
       return res
     }
+
+    // 监听角色变化，更新tabbar
+    watch(() => userInfo.value.role, async (newRole) => {
+      if (newRole) {
+        // 延迟执行，避免初始化时的循环依赖
+        setTimeout(async () => {
+          await updateTabbarListByRole()
+        }, 0)
+      }
+    })
 
     return {
       userInfo,

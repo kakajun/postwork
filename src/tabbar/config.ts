@@ -58,6 +58,38 @@ export interface CustomTabBarItem {
   badge?: CustomTabBarItemBadge
   isBulge?: boolean // 是否是中间的鼓包tabbarItem
 }
+// 项目发布者角色的tabbar配置
+export const postTabbarList: CustomTabBarItem[] = [
+  {
+    text: '项目大厅',
+    pagePath: 'pages/index/ProjectHall',
+    iconType: 'unocss',
+    icon: 'i-carbon-home',
+  },
+  {
+    pagePath: 'pages/me/me',
+    text: '我的',
+    iconType: 'unocss',
+    icon: 'i-carbon-user',
+  },
+]
+
+// 项目接收者角色的tabbar配置
+export const receiveTabbarList: CustomTabBarItem[] = [
+  {
+    text: '接收项目',
+    pagePath: 'pages/about/about',
+    iconType: 'unocss',
+    icon: 'i-carbon-code',
+  },
+  {
+    pagePath: 'pages/me/me',
+    text: '我的',
+    iconType: 'unocss',
+    icon: 'i-carbon-user',
+  },
+]
+
 // TODO: 3/3. 使用 CUSTOM_TABBAR(2,3) 时，更新下面的 tabbar 配置
 // 如果需要配置鼓包，需要在 'tabbar/store.ts' 里面设置，最后在 `tabbar/index.vue` 里面更改鼓包的图片
 export const customTabbarList: CustomTabBarItem[] = [

@@ -19,16 +19,14 @@ const themeStore = useThemeStore()
 
 // 页面跳转方法
 function navigateToProject() {
-
     uni.navigateTo({
     url: `/pages-register/accept-oneParty/index`
   })
 }
 
 function navigateToAccept() {
-  uni.showToast({
-    title: '接单方功能开发中',
-    icon: 'none',
+    uni.navigateTo({
+    url: `/pages-register/receive-oneParty/index`
   })
 }
 

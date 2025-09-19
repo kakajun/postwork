@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-import TechSupplementDrawer from './components/TechSupplementDrawer.vue'
+import TechSupplementDrawer from '../accept-oneParty/components/TechSupplementDrawer.vue'
 
 // 页面配置
 definePage({
   style: {
-    navigationBarTitleText: '项目方信息注册',
+    navigationBarTitleText: '接单方信息注册',
     navigationBarBackgroundColor: '#FF6F00',
     navigationBarTextStyle: 'white'
   }
@@ -44,7 +44,7 @@ const showTechDrawer = ref(false)
 
 // 页面加载
 onLoad(() => {
-  console.log('项目方信息注册页面加载')
+  console.log('接单方信息注册页面加载')
 })
 
 // 返回上一页

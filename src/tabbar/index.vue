@@ -2,7 +2,9 @@
 // i-carbon-code
 import type { CustomTabBarItem } from './config'
 import { customTabbarEnable, needHideNativeTabbar, tabbarCacheEnable } from './config'
-import { tabbarList, tabbarStore } from './store'
+import { tabbarList, tabbarStore, updateTabbarListByRole } from './store'
+import { useUserStore } from '@/store/user'
+import { onMounted, watch, ref, nextTick } from 'vue'
 
 // #ifdef MP-WEIXIN
 // 将自定义节点设置成虚拟的（去掉自定义组件包裹层），更加接近Vue组件的表现，能更好的使用flex属性
@@ -10,6 +12,28 @@ defineOptions({
   virtualHost: true,
 })
 // #endif
+
+const userStore = useUserStore()
+const renderKey = ref(0)
+
+// 监听角色变化，强制重新渲染
+watch(() => userStore.userInfo.role, async (newRole) => {
+  console.log('Tabbar component detected role change:', newRole)
+  if (newRole) {
+    await updateTabbarListByRole()
+    // 强制重新渲染
+    renderKey.value++
+    await nextTick()
+  }
+})
+
+// 组件挂载时根据角色更新tabbar
+onMounted(async () => {
+  // 延迟执行，避免初始化时的循环依赖
+  setTimeout(async () => {
+    await updateTabbarListByRole()
+  }, 100)
+})
 
 /**
  * 中间的鼓包tabbarItem的点击事件
@@ -70,7 +94,7 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
 </script>
 
 <template>
-  <view v-if="customTabbarEnable" class="h-50px pb-safe">
+  <view v-if="customTabbarEnable" class="h-50px pb-safe" :key="renderKey">
     <view class="border-and-fixed bg-white" @touchmove.stop.prevent>
       <view class="h-50px flex items-center">
         <view
