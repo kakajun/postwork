@@ -98,9 +98,8 @@ function goToProjectDetail(project: any) {
 
 // 新建项目按钮点击事件
 function onCreateProject() {
-  uni.showToast({
-    title: '新建项目功能开发中',
-    icon: 'none',
+  uni.navigateTo({
+    url: `/pages-project/post/PostProject`
   })
 }
 
@@ -113,14 +112,14 @@ onLoad(() => {
   <view class="min-h-screen flex flex-col bg-gray-50">
     <!-- 顶部标题栏 -->
     <view
-      class="flex items-center justify-between px-4 py-3 bg-orange-400"
-      :style="{ paddingTop: `${safeAreaInsets?.top + 12}px` }"
+      class="flex items-center justify-between px-4 py-3 bg-orange-400 fixed top-0 left-0 right-0 z-99"
+      :style="{ paddingTop: `${safeAreaInsets?.top + 4}px` }"
     >
       <view class="text-white text-lg font-medium">我发布的项目</view>
 
       <!-- 右上角新建按钮 -->
       <view
-        class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center"
+        class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-20"
         @tap="onCreateProject"
       >
         <view class="w-4 h-0.5 bg-white"></view>
@@ -132,7 +131,7 @@ onLoad(() => {
     <scroll-view
       scroll-y
       class="flex-1 px-4 py-4"
-      style="height: calc(100vh - 80px);"
+      :style="{ paddingTop: `${(safeAreaInsets?.top || 0) + 60}px` }"
     >
       <wd-cell-group
         v-for="project in projectList"

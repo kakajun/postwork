@@ -114,6 +114,37 @@ function selectRole(role: { id: number; name: string; desc: string }) {
     icon: 'success'
   })
 }
+
+// 页面跳转函数
+function navigateToMyData() {
+  uni.navigateTo({
+    url: '/pages-me/Mydata'
+  })
+}
+
+function navigateToVipService() {
+  uni.navigateTo({
+    url: '/pages-me/VipService'
+  })
+}
+
+function navigateToLoginManagement() {
+  uni.navigateTo({
+    url: '/pages-me/LoginManagement'
+  })
+}
+
+function navigateToPrivacyPolicy() {
+  uni.navigateTo({
+    url: '/pages-me/PrivacyPolicy'
+  })
+}
+
+function navigateToCollectChecklist() {
+  uni.navigateTo({
+    url: '/pages-me/CollectChecklist'
+  })
+}
 </script>
 
 <template>
@@ -155,7 +186,7 @@ function selectRole(role: { id: number; name: string; desc: string }) {
       </view>
 
       <!-- 我的资料 -->
-      <view class="menu-item">
+      <view class="menu-item" @click="navigateToMyData">
         <view class="menu-icon">
           <text class="icon">📄</text>
         </view>
@@ -166,7 +197,7 @@ function selectRole(role: { id: number; name: string; desc: string }) {
       </view>
 
       <!-- 终生VIP服务 -->
-      <view class="menu-item">
+      <view class="menu-item" @click="navigateToVipService">
         <view class="menu-icon">
           <text class="icon">👑</text>
         </view>
@@ -189,7 +220,7 @@ function selectRole(role: { id: number; name: string; desc: string }) {
       </view>
 
       <!-- 账号登录管理 -->
-      <view class="menu-item">
+      <view class="menu-item" @click="navigateToLoginManagement">
         <view class="menu-icon">
           <text class="icon">🔐</text>
         </view>
@@ -200,7 +231,7 @@ function selectRole(role: { id: number; name: string; desc: string }) {
       </view>
 
       <!-- privacyPolicy -->
-      <view class="menu-item">
+      <view class="menu-item" @click="navigateToPrivacyPolicy">
         <view class="menu-icon">
           <text class="icon">🛡️</text>
         </view>
@@ -211,7 +242,7 @@ function selectRole(role: { id: number; name: string; desc: string }) {
       </view>
 
       <!-- 个人信息收集清单 -->
-      <view class="menu-item">
+      <view class="menu-item" @click="navigateToCollectChecklist">
         <view class="menu-icon">
           <text class="icon">📊</text>
         </view>
@@ -221,16 +252,6 @@ function selectRole(role: { id: number; name: string; desc: string }) {
         </view>
       </view>
 
-      <!-- 联系客服 -->
-      <view class="menu-item">
-        <view class="menu-icon">
-          <text class="icon">📞</text>
-        </view>
-        <view class="menu-text">联系客服</view>
-        <view class="menu-arrow">
-          <text class="arrow">></text>
-        </view>
-      </view>
     </view>
 
 
