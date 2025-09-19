@@ -118,6 +118,7 @@ onLoad(() => {
       <view class="text-white text-lg font-medium">我发布的项目</view>
 
       <!-- 右上角新建按钮 -->
+      <!-- #ifdef MP-WEIXIN -->
       <view
         class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-20"
         @tap="onCreateProject"
@@ -125,6 +126,16 @@ onLoad(() => {
         <view class="w-4 h-0.5 bg-white"></view>
         <view class="w-0.5 h-4 bg-white absolute"></view>
       </view>
+      <!-- #endif -->
+      <!-- #ifndef MP-WEIXIN -->
+      <view
+        class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-1"
+        @tap="onCreateProject"
+      >
+        <view class="w-4 h-0.5 bg-white"></view>
+        <view class="w-0.5 h-4 bg-white absolute"></view>
+      </view>
+      <!-- #endif -->
     </view>
 
     <!-- 项目列表 -->

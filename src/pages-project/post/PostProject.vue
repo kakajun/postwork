@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import TechSupplementDrawer from '@/pages-register/accept-oneParty/components/TechSupplementDrawer.vue'
 
-// 页面配置 - 使用系统自带头部导航栏
 definePage({
-  navigationBarTitleText: '发布项目',
-  // navigationStyle: 'default', // 使用系统默认头部
+    style: {
+  navigationBarTitleText: '项目发布',
+    }
 })
 
 // 表单数据
@@ -12,11 +13,16 @@ const projectForm = ref({
   title: '',
   description: '',
   category: '',
-  budget: '',
-  deadline: '',
-  contact: '',
-  requirements: ''
+  requirements: '',
+  selectedTechs: [] as string[],
+  attachments: [] as string[] // 附件图片路径数组
 })
+
+// 技术要求弹窗状态
+const techDrawerVisible = ref(false)
+
+// 图片上传相关状态
+const uploadingImages = ref<string[]>([]) // 正在上传的图片临时路径
 
 // 项目分类选项
 const categories = [
@@ -64,17 +70,64 @@ function submitForm() {
   }, 2000)
 }
 
-// 重置表单
-function resetForm() {
-  projectForm.value = {
-    title: '',
-    description: '',
-    category: '',
-    budget: '',
-    deadline: '',
-    contact: '',
-    requirements: ''
-  }
+// 打开技术要求选择弹窗
+function openTechDrawer() {
+  techDrawerVisible.value = true
+}
+
+// 处理技术要求选择确认
+function handleTechConfirm(selectedTechs: string[]) {
+  projectForm.value.selectedTechs = selectedTechs
+}
+
+// 选择图片
+function chooseImage() {
+  uni.chooseImage({
+    count: 9 - projectForm.value.attachments.length, // 最多9张
+    sizeType: ['compressed'], // 压缩图
+    sourceType: ['album', 'camera'], // 相册和相机
+    success: (res) => {
+      const tempFilePaths = res.tempFilePaths
+
+      // 添加到上传队列
+      uploadingImages.value.push(...tempFilePaths)
+
+      // 模拟上传过程
+      tempFilePaths.forEach((path, index) => {
+        setTimeout(() => {
+          // 移除上传队列
+          const uploadIndex = uploadingImages.value.indexOf(path)
+          if (uploadIndex > -1) {
+            uploadingImages.value.splice(uploadIndex, 1)
+          }
+
+          // 添加到已上传列表（这里模拟上传成功）
+          projectForm.value.attachments.push(path)
+        }, 1000 * (index + 1))
+      })
+    }
+  })
+}
+
+// 删除图片
+function deleteImage(index: number) {
+  uni.showModal({
+    title: '提示',
+    content: '确定要删除这张图片吗？',
+    success: (res) => {
+      if (res.confirm) {
+        projectForm.value.attachments.splice(index, 1)
+      }
+    }
+  })
+}
+
+// 预览图片
+function previewImage(index: number) {
+  uni.previewImage({
+    urls: projectForm.value.attachments,
+    current: projectForm.value.attachments[index]
+  })
 }
 </script>
 
@@ -135,59 +188,89 @@ function resetForm() {
         <view class="bg-white rounded-lg p-4 mb-4 shadow-sm">
           <text class="block text-gray-800 text-lg font-medium mb-4">项目要求</text>
 
-          <!-- 预算 -->
+          <!-- 附件上传 -->
           <view class="mb-4">
-            <text class="block text-gray-600 text-sm mb-2">项目预算</text>
-            <input
-              v-model="projectForm.budget"
-              class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
-              placeholder="请输入项目预算（如：5000元）"
-              type="number"
-            />
-          </view>
-
-          <!-- 截止日期 -->
-          <view class="mb-4">
-            <text class="block text-gray-600 text-sm mb-2">截止日期</text>
-            <picker
-              mode="date"
-              :value="projectForm.deadline"
-              @change="(e) => projectForm.deadline = e.detail.value"
-            >
-              <view class="flex items-center justify-between px-3 py-2 border border-gray-200 rounded-lg">
-                <text :class="projectForm.deadline ? 'text-gray-800' : 'text-gray-400'">
-                  {{ projectForm.deadline || '请选择截止日期' }}
-                </text>
-                <text class="text-gray-400">📅</text>
+            <text class="block text-gray-600 text-sm mb-2">项目附件</text>
+            <view class="flex flex-wrap gap-2">
+              <!-- 已上传的图片 -->
+              <view
+                v-for="(image, index) in projectForm.attachments"
+                :key="index"
+                class="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200"
+              >
+                <image
+                  :src="image"
+                  mode="aspectFill"
+                  class="w-full h-full"
+                  @tap="previewImage(index)"
+                />
+                <view
+                  class="absolute top-0 right-0 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"
+                  @tap="deleteImage(index)"
+                >
+                  <text class="text-white text-xs">×</text>
+                </view>
               </view>
-            </picker>
+
+              <!-- 上传中的图片 -->
+              <view
+                v-for="(image, index) in uploadingImages"
+                :key="'uploading-' + index"
+                class="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center"
+              >
+                <image
+                  :src="image"
+                  mode="aspectFill"
+                  class="w-full h-full opacity-60"
+                />
+                <view class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                  <text class="text-white text-xs">上传中...</text>
+                </view>
+              </view>
+
+              <!-- 添加图片按钮 -->
+              <view
+                v-if="projectForm.attachments.length + uploadingImages.length < 9"
+                class="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center bg-gray-50"
+                @tap="chooseImage"
+              >
+                <text class="text-gray-400 text-2xl">+</text>
+                <text class="text-gray-400 text-xs mt-1">{{ projectForm.attachments.length }}/9</text>
+              </view>
+            </view>
           </view>
 
-          <!-- 特殊要求 -->
+          <!-- 技术要求 -->
           <view class="mb-4">
-            <text class="block text-gray-600 text-sm mb-2">特殊要求</text>
-            <textarea
-              v-model="projectForm.requirements"
-              class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none h-16"
-              placeholder="技能要求、交付标准等特殊要求（选填）"
-              maxlength="300"
-            />
-            <text class="block text-right text-gray-400 text-xs mt-1">{{ projectForm.requirements.length }}/300</text>
-          </view>
-        </view>
+            <text class="block text-gray-600 text-sm mb-2">技术要求</text>
+            <view
+              class="flex items-center justify-between px-3 py-2 border border-gray-200 rounded-lg bg-white"
+              @tap="openTechDrawer"
+            >
+              <text :class="projectForm.selectedTechs.length > 0 ? 'text-gray-800' : 'text-gray-400'">
+                {{ projectForm.selectedTechs.length > 0 ? `已选择 ${projectForm.selectedTechs.length} 项技术` : '请选择技术要求' }}
+              </text>
+              <text class="text-gray-400">▼</text>
+            </view>
 
-        <!-- 联系方式 -->
-        <view class="bg-white rounded-lg p-4 mb-6 shadow-sm">
-          <text class="block text-gray-800 text-lg font-medium mb-4">联系方式</text>
-
-          <view class="mb-4">
-            <text class="block text-gray-600 text-sm mb-2">联系信息</text>
-            <input
-              v-model="projectForm.contact"
-              class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none"
-              placeholder="微信号、手机号或其他联系方式"
-              maxlength="100"
-            />
+            <!-- 已选择的技术标签展示 -->
+            <view v-if="projectForm.selectedTechs.length > 0" class="mt-3">
+              <view class="flex flex-wrap gap-2">
+                <view
+                  v-for="tech in projectForm.selectedTechs.slice(0, 6)"
+                  :key="tech"
+                  class="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full"
+                >
+                  {{ tech }}
+                </view>
+                <view
+                  v-if="projectForm.selectedTechs.length > 6"
+                  class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+                >
+                  +{{ projectForm.selectedTechs.length - 6 }}
+                </view>
+              </view>
+            </view>
           </view>
         </view>
 
@@ -200,14 +283,15 @@ function resetForm() {
             发布项目
           </button>
 
-          <button
-            @tap="resetForm"
-            class="w-full bg-gray-200 text-gray-600 py-3 rounded-lg font-medium hover:bg-gray-300 active:bg-gray-400"
-          >
-            重置表单
-          </button>
         </view>
       </view>
     </scroll-view>
+
+    <!-- 技术要求选择弹窗 -->
+    <TechSupplementDrawer
+      v-model:visible="techDrawerVisible"
+      v-model:selectedTechs="projectForm.selectedTechs"
+      @confirm="handleTechConfirm"
+    />
   </view>
 </template>

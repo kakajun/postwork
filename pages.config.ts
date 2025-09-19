@@ -8,7 +8,6 @@ export default defineUniPages({
     navigationBarTitleText: 'unibest',
     navigationBarBackgroundColor: '#FF8C00',
     navigationBarTextStyle: 'white',
-    backgroundColor: '#FFFFFF',
   },
   easycom: {
     autoscan: true,
